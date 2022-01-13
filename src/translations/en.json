@@ -6,6 +6,7 @@
   "ActivityFeed.ownTransitionAccept": "You accepted the booking request.",
   "ActivityFeed.ownTransitionDecline": "You declined the booking request.",
   "ActivityFeed.ownTransitionExpire": "Booking request expired. You did not reply on time.",
+  "ActivityFeed.operatorDecline": "The booking was cancelled.",
   "ActivityFeed.ownTransitionRequest": "You requested to book { listingTitle }.",
   "ActivityFeed.ownTransitionReview": "You left a review for { displayName }.",
   "ActivityFeed.showOlderMessages": "Show older",

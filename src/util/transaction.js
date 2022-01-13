@@ -19,7 +19,9 @@ export const TRANSITION_REQUEST_PAYMENT = 'transition/request-payment';
 // then transition that with a request.
 export const TRANSITION_ENQUIRE = 'transition/enquire';
 export const TRANSITION_REQUEST_PAYMENT_AFTER_ENQUIRY = 'transition/request-payment-after-enquiry';
-
+///********************** */ new state
+export const TRANSITION_DECLINE_BY_OPERATOR =
+  'transition/decline-preauthorized-by-operator';
 // Stripe SDK might need to ask 3D security from customer, in a separate front-end step.
 // Therefore we need to make another transition to Marketplace API,
 // to tell that the payment is confirmed.
@@ -94,7 +96,8 @@ const STATE_DELIVERED = 'delivered';
 const STATE_REVIEWED = 'reviewed';
 const STATE_REVIEWED_BY_CUSTOMER = 'reviewed-by-customer';
 const STATE_REVIEWED_BY_PROVIDER = 'reviewed-by-provider';
-
+//***********new transitions*/
+const STATE_DECLINED_BY_OPERATOR = 'declined-by-operator';
 /**
  * Description of transaction process
  *
@@ -140,10 +143,12 @@ const stateDescription = {
         [TRANSITION_DECLINE]: STATE_DECLINED,
         [TRANSITION_EXPIRE]: STATE_DECLINED,
         [TRANSITION_ACCEPT]: STATE_ACCEPTED,
+        [TRANSITION_DECLINE_BY_OPERATOR]: STATE_DECLINED_BY_OPERATOR,
       },
     },
 
     [STATE_DECLINED]: {},
+    [STATE_DECLINED_BY_OPERATOR]: {},
     [STATE_ACCEPTED]: {
       on: {
         [TRANSITION_CANCEL]: STATE_CANCELED,
@@ -237,8 +242,13 @@ export const txIsRequested = tx =>
 export const txIsAccepted = tx =>
   getTransitionsToState(STATE_ACCEPTED).includes(txLastTransition(tx));
 
+//**********txIsDeclined **********/
+const transitionsToDeclined = [
+    ...getTransitionsToState(STATE_DECLINED),
+    ...getTransitionsToState(STATE_DECLINED_BY_OPERATOR),
+    ];
 export const txIsDeclined = tx =>
-  getTransitionsToState(STATE_DECLINED).includes(txLastTransition(tx));
+    transitionsToDeclined.includes(txLastTransition(tx));
 
 export const txIsCanceled = tx =>
   getTransitionsToState(STATE_CANCELED).includes(txLastTransition(tx));
@@ -303,6 +313,7 @@ export const isRelevantPastTransition = transition => {
     TRANSITION_COMPLETE,
     TRANSITION_CONFIRM_PAYMENT,
     TRANSITION_DECLINE,
+    TRANSITION_DECLINE_BY_OPERATOR,
     TRANSITION_EXPIRE,
     TRANSITION_REVIEW_1_BY_CUSTOMER,
     TRANSITION_REVIEW_1_BY_PROVIDER,
